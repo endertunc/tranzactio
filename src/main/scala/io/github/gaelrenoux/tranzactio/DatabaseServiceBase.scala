@@ -18,7 +18,7 @@ abstract class DatabaseServiceBase[Connection: Tag](connectionSource: Connection
     ZIO.environmentWithZIO[R] { r =>
       runTransaction({ c: JdbcConnection =>
         connectionFromJdbc(c)
-          .map(r ++ ZEnvironment(_))
+          .map(r ++ ZEnvironment[R](_))
           .flatMap(zio.provideEnvironment(_))
       }, commitOnFailure)
     }
@@ -28,7 +28,7 @@ abstract class DatabaseServiceBase[Connection: Tag](connectionSource: Connection
     ZIO.environmentWithZIO[R] { r =>
       runAutoCommit { c: JdbcConnection =>
         connectionFromJdbc(c)
-          .map(r ++ ZEnvironment(_))
+          .map(r ++ ZEnvironment[R](_))
           .flatMap(zio.provideEnvironment(_))
       }
     }
